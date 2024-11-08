@@ -1,0 +1,18 @@
+import java.io.*;
+import java.util.*;
+
+public class Document{
+
+   public int docID;
+   public String content;
+
+   public Document(int ID, String con){
+      docID = ID;
+      content = con;
+   }
+   
+   public String toString(){
+   return "Document ID: "  + docID + ", \n" + "document content: " + content;
+   }
+
+}
