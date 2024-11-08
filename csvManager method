@@ -1,0 +1,62 @@
+//This method shall be implemented in main class
+public static LinkedList<Document> csvManager(String fileName) {
+      LinkedList<Document> documentList = new LinkedList<>();
+
+      try {
+         File file = new File(fileName);
+         Scanner docReader = new Scanner(file);
+
+         // Skip the header line
+         if (docReader.hasNextLine()) {
+            docReader.nextLine();  
+         }
+
+         // Process each line of the CSV
+         while (docReader.hasNextLine()) {
+            String line = docReader.nextLine().trim();  // Remove leading/trailing spaces
+
+            // Skip empty lines (if any)
+            if (line.isEmpty()) {
+               continue;
+            }
+
+            // Find the first comma that separates the ID from the content
+            int commaIndex = line.indexOf(",");
+            if (commaIndex == -1) {
+               // If no comma found, skip the line (invalid format)
+               continue;
+            }
+
+            // Extract the Document ID and Content
+            String idString = line.substring(0, commaIndex).trim();
+            String content = line.substring(commaIndex + 1).trim();
+
+            // If the ID string is empty, skip the line
+            if (idString.isEmpty()) {
+               continue;
+            }
+
+            // Try to parse the Document ID
+            try {
+               int id = Integer.parseInt(idString);
+
+               // Remove quotes around content (if present)
+               if (content.startsWith("\"") && content.endsWith("\"")) {
+                  content = content.substring(1, content.length() - 1);
+               }
+
+               // Add the document to the list
+               documentList.add(new Document(id, content));
+            } catch (NumberFormatException e) {
+               // If we can't parse the ID, skip this line
+               System.out.println("Invalid document ID, skipping line: " + line);
+            }
+         }
+
+         return documentList;
+      } catch (FileNotFoundException e) {
+         System.out.println("An error occurred.");
+         e.printStackTrace();
+         return new LinkedList<>();
+      }
+   }
